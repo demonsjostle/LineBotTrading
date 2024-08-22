@@ -1,0 +1,6 @@
+venv/
+*.html
+*.pdf
+*.docx
+*.mq5
+Facebook_files/
