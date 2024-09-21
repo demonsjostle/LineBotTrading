@@ -37,6 +37,7 @@ export const useUser = () => {
     data: user,
     isError,
     error,
+    isLoading,
   } = useQuery({
     queryKey: ["user"],
     queryFn: () => getLineUser(),
@@ -61,5 +62,6 @@ export const useUser = () => {
 
   return {
     user: user ?? null,
+    isLoading,
   };
 };
