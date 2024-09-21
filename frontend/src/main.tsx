@@ -3,11 +3,15 @@ import { createRoot } from "react-dom/client";
 import Main from "./routes";
 import { BrowserRouter } from "react-router-dom";
 import "./assets/styles/Global.styles.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Main />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Main />
+      </BrowserRouter>
+    </QueryClientProvider>
   </StrictMode>,
 );

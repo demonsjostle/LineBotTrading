@@ -1,8 +1,15 @@
 import React, { useState } from "react";
+import { useUser } from "../../services/queries/useUser";
+import { useLogout } from "../../services/queries/useLogout";
+import { useNavigate } from "react-router-dom";
 
 const index = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const onLogout = useLogout();
+
+  const { user } = useUser();
 
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
@@ -45,46 +52,61 @@ const index = () => {
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             <div className="relative">
-              <button
-                type="button"
-                className="flex items-center max-w-xs bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={toggleUserMenu}
-              >
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src="https://via.placeholder.com/150"
-                  alt="User Profile"
-                />
-              </button>
-              {isUserMenuOpen && (
-                <div
-                  className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="user-menu-button"
-                >
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
+              {user ? (
+                <>
+                  <button
+                    type="button"
+                    className="flex items-center max-w-xs bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={toggleUserMenu}
                   >
-                    Your Profile
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={user?.picture}
+                      alt="User Profile"
+                    />
+                  </button>
+                  {isUserMenuOpen && (
+                    <div
+                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="user-menu-button"
+                    >
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center"
+                        role="menuitem"
+                      >
+                        Your Profile
+                      </a>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center"
+                        role="menuitem"
+                      >
+                        Settings
+                      </a>
+                      <a
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center"
+                        role="menuitem"
+                        onClick={onLogout}
+                      >
+                        Sign out
+                      </a>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <button
+                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      navigate("/login");
+                    }}
                   >
-                    Settings
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    Sign out
-                  </a>
-                </div>
+                    Login
+                  </button>
+                </>
               )}
             </div>
           </div>
