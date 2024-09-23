@@ -1,13 +1,13 @@
 from django.urls import path
-from .views import (CustomerListCreateView, CustomerDetailView, OrderListCreateView,
+from .views import (CustomerCreateView, CustomerDetailByLineIDView, OrderListCreateView,
                     OrderDetailView, PackageListCreateView, PackageDetailView)
 
 
 urlpatterns = [
-    path('api/store/customer/', CustomerListCreateView.as_view(),
+    path('api/store/customer/create/', CustomerCreateView.as_view(),
          name='customer-list-create'),
-    path('api/store/notification/<int:pk>/',
-         CustomerDetailView.as_view(), name='customer-detail'),
+    path('api/store/customer/<str:line_user_id>/',
+         CustomerDetailByLineIDView.as_view(), name='customer-detail'),
     path('api/store/package/', PackageListCreateView.as_view(),
          name='package-list-create'),
     path('api/store/package/<int:pk>/',

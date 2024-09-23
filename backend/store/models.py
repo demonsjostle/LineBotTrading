@@ -24,9 +24,13 @@ class Package(models.Model):
 
 class Customer(models.Model):
     name = models.CharField(max_length=50)
-    line_user_id = models.CharField(max_length=100)
+    line_user_id = models.CharField(max_length=100, unique=True)
+    picture_url = models.CharField(
+        max_length=250, default=None, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    mt5_id = models.CharField(
+        max_length=6, default=None, blank=True, null=True)
     current_plan = models.ForeignKey(Package,
                                      on_delete=models.CASCADE, blank=True, null=True)
     expired_plan = models.DateTimeField(default=None, blank=True, null=True)

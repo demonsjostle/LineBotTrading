@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
+import re
 
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseServerError, JsonResponse, HttpResponseRedirect
 from decouple import config
@@ -108,6 +109,32 @@ class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
 class SendMessageAPIView(APIView):
 
     def post(self, request):
+        # Template for the buy format message
+        buy_format = """=== 🔔Open Order ===
+Symbol : {symbol}
+Position : Buy 🟩
+Entry Price : {entry_price}
+TP : {tp}
+SL : {sl}
+
+Date 🗓️: {date}
+Time 🕛: {time}
+Win/Loss : {win_loss}
+=====================
+Trader : {trader_name}"""
+
+        sell_format = """=== 🔔Open Order ===
+Symbol : {symbol}
+Position : Sell 🟥
+Entry Price : {entry_price}
+TP : {tp}
+SL : {sl}
+
+Date 🗓️: {date}
+Time 🕛: {time}
+Win/Loss : {win_loss}
+=====================
+Trader : {trader_name}"""
         # Parse the incoming data
         serializer = MessageSerializer(data=request.data)
 
@@ -115,9 +142,46 @@ class SendMessageAPIView(APIView):
         if serializer.is_valid():
             # Access the message
             request_message = serializer.validated_data
+            message_content = request_message['message']
 
-            # print(request_message["message"])
-            # print(request_message["package"])
+            formatted_message = message_content.replace("\\n", "\n")
+            # Extract data from the formatted message
+            # Assuming the message is in a predefined format and we can extract the values based on known lines
+            lines = formatted_message.split('\n')
+            data = {}
+            for line in lines:
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    data[key.strip().lower()] = value.strip()
+
+            # Select the correct format based on the position (buy/sell)
+            if data.get('position', '').upper() == 'BUY':
+                message_to_send = buy_format.format(
+                    symbol=data.get('symbol', ''),
+                    entry_price=data.get('entry price', ''),
+                    tp=data.get('tp', ''),
+                    sl=data.get('sl', ''),
+                    date=data.get('date', ''),
+                    time=data.get('time', ''),
+                    win_loss=data.get('win/loss', ''),
+                    trader_name=data.get('trader', '')
+                )
+            elif data.get('position', '').upper() == 'SELL':
+                message_to_send = sell_format.format(
+                    symbol=data.get('symbol', ''),
+                    entry_price=data.get('entry price', ''),
+                    tp=data.get('tp', ''),
+                    sl=data.get('sl', ''),
+                    date=data.get('date', ''),
+                    time=data.get('time', ''),
+                    win_loss=data.get('win/loss', ''),
+                    trader_name=data.get('trader', '')
+                )
+            else:
+                return Response({"error": "Invalid position format"}, status=status.HTTP_400_BAD_REQUEST)
+
+                # print(request_message["message"])
+                # print(request_message["package"])
 
             customers = Customer.objects.all()
             if len(customers) >= 1:
@@ -129,7 +193,7 @@ class SendMessageAPIView(APIView):
                         # check not expired_plan
                         if not (current_time > customer.expired_plan):
                             mess = TextMessage(
-                                text=f"{request_message['message']}")
+                                text=message_to_send)
                             line_bot_api.push_message(PushMessageRequest(
                                 to=customer.line_user_id, messages=[mess]))
 
@@ -140,6 +204,6 @@ class SendMessageAPIView(APIView):
                                 line_bot_api.push_message(PushMessageRequest(
                                     to=customer.line_user_id, messages=[mess]))
 
-            return Response({"success": True, "message": request_message}, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"success": True, "message": request_message}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
