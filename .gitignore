@@ -1,6 +1,6 @@
 venv/
-*.html
 *.pdf
 *.docx
 *.mq5
 Facebook_files/
+.DS_Store
