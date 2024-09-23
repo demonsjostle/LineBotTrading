@@ -9,7 +9,7 @@ services:
     volumes:
       - static_vol:/app/staticfiles
       - media_vol:/app/media
-      # - sqlite3_vol:/app/db
+      - sqlite3_vol:/app/db
     ports:
       - "8000:8000"
 
@@ -28,4 +28,4 @@ services:
 volumes:
   static_vol:
   media_vol:
-  # sqlite3_vol:
+  sqlite3_vol:
