@@ -74,21 +74,21 @@ const index = () => {
                         aria-labelledby="user-menu-button"
                       >
                         <a
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center cursor-pointer"
                           role="menuitem"
                           onClick={() => navigate("/profile")}
                         >
                           Profile
                         </a>
+                        {/* <a */}
+                        {/*   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center cursor-pointer" */}
+                        {/*   role="menuitem" */}
+                        {/*   onClick={() => navigate("/settings")} */}
+                        {/* > */}
+                        {/*   Settings */}
+                        {/* </a> */}
                         <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center"
-                          role="menuitem"
-                        >
-                          Settings
-                        </a>
-                        <a
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center cursor-pointer"
                           role="menuitem"
                           onClick={onLogout}
                         >
