@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../../layouts";
 import { useLocation } from "react-router-dom";
 import { useUser } from "../../services/queries/useUser";
-import { useAddCustomerMutation } from "../../services/queries/useCustomer";
+import {
+  useAddCustomerMutation,
+  useGetCustomerQuery,
+  useUpdateCustomerMutation,
+} from "../../services/queries/useCustomer";
 import { useAddOrderMutation } from "../../services/queries/useOrder";
 import { useSnackbar } from "notistack";
 
@@ -84,12 +88,15 @@ const PaymentMethod = () => {
 };
 
 const ConfirmPayment = ({ selectedPackage }) => {
+  const [customer, setCustomer] = useState(null);
   const [paymentSlip, setPaymentSlip] = useState(null);
   const [isSlipUploaded, setIsSlipUploaded] = useState(false);
+  const [mt5Id, setMt5Id] = useState("");
   const [successOrderKey, setSuccessOrderKey] = useState(null);
   const { user } = useUser();
   const { mutate: addCustomer, isError, error } = useAddCustomerMutation();
   const { mutate: addOrder } = useAddOrderMutation();
+  const { mutate: updateCustomer } = useUpdateCustomerMutation();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleImageUpload = (e) => {
@@ -105,7 +112,20 @@ const ConfirmPayment = ({ selectedPackage }) => {
       if (user) {
         addCustomer(user, {
           onSuccess: (customerData) => {
-            console.log("Mutation success, customer ID or data:", customerData);
+            setCustomer(customerData);
+            if (!customerData.mt5_id && !mt5Id) {
+              enqueueSnackbar("Please enter your MT5 ID", {
+                variant: "warning",
+              });
+              return;
+            } else {
+              const data = {
+                mt5_id: mt5Id,
+              };
+
+              updateCustomer({ data, line_user_id: customerData.line_user_id });
+            }
+
             // Add order here after successful customer mutation
             addOrder(
               {
@@ -172,6 +192,24 @@ const ConfirmPayment = ({ selectedPackage }) => {
             </p>
           )}
         </div>
+
+        {/* Conditionally render mt5_id input */}
+        {!customer?.mt5_id && (
+          <div className="mb-6">
+            <label className="block text-lg font-medium text-gray-700 text-center mb-4">
+              กรุณากรอก MT5 ID
+            </label>
+            <div className="flex justify-center">
+              <input
+                type="text"
+                value={mt5Id}
+                onChange={(e) => setMt5Id(e.target.value)}
+                className="border rounded-lg py-2 px-4 w-64 text-center"
+                placeholder="Enter your MT5 ID"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Confirm Payment Button */}
         <div className="flex justify-center">

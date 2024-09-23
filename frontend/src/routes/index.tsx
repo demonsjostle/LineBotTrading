@@ -3,18 +3,30 @@ import AuthRoutes from "./AuthRoutes";
 import UnAuthRoutes from "./UnAuthRoutes";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../services/queries/useUser";
+import Loading from "../components/Loading";
 
 const index = () => {
   const navigate = useNavigate();
 
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
 
   useEffect(() => {
     if (!user) {
       // navigate("/login");
     }
   }, [user]);
-  return <>{user ? <AuthRoutes /> : <UnAuthRoutes />}</>;
+
+  return (
+    <>
+      {isLoading ? (
+        <>
+          <Loading />
+        </>
+      ) : (
+        <>{user ? <AuthRoutes /> : <UnAuthRoutes />}</>
+      )}
+    </>
+  );
 };
 
 export default index;
