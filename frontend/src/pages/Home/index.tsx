@@ -1,9 +1,6 @@
-import React from "react";
 import MainLayout from "../../layouts";
-import { useUser } from "../../services/queries/useUser";
-const index = () => {
-  // const { user } = useUser();
 
+const index = () => {
   return (
     <MainLayout>
       <div className="flex items-center justify-center h-screen">

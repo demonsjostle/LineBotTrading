@@ -4,8 +4,6 @@ import { useSnackbar } from "notistack";
 import { useQuery } from "@tanstack/react-query";
 
 export const useAddCustomerMutation = () => {
-  const queryClient = useQueryClient();
-
   const getOrCreateCustomer = async (user) => {
     try {
       const customer = await getCustomer(user.sub);

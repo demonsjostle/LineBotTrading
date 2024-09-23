@@ -1,4 +1,3 @@
-import React from "react";
 import LineLogo from "../../assets/images/LINE_Brand_icon.png";
 import liff from "@line/liff";
 

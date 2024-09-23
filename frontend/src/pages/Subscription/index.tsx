@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import MainLayout from "../../layouts";
 import { useLocation } from "react-router-dom";
 import { useUser } from "../../services/queries/useUser";

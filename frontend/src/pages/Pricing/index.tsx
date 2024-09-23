@@ -1,4 +1,3 @@
-import React from "react";
 import MainLayout from "../../layouts";
 import { usePackagesQuery } from "../../services/queries/usePackage";
 import { useNavigate } from "react-router-dom";
@@ -56,10 +55,11 @@ const index = () => {
                       {packageItem.duration} วัน
                     </div>
                     <button
-                      className={`w-full bg-blue-600 text-white py-3 rounded-lg shadow-md transition duration-300 ${isLoading
+                      className={`w-full bg-blue-600 text-white py-3 rounded-lg shadow-md transition duration-300 ${
+                        isLoading
                           ? "cursor-not-allowed opacity-50"
                           : "hover:bg-blue-700"
-                        }`}
+                      }`}
                       disabled={isLoading}
                       onClick={() => handleChoosePlan(packageItem)} // Handle button click
                     >
