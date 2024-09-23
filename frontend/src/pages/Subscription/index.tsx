@@ -88,7 +88,6 @@ const PaymentMethod = () => {
 };
 
 const ConfirmPayment = ({ selectedPackage }) => {
-  const [customer, setCustomer] = useState(null);
   const [paymentSlip, setPaymentSlip] = useState(null);
   const [isSlipUploaded, setIsSlipUploaded] = useState(false);
   const [mt5Id, setMt5Id] = useState("");
@@ -97,6 +96,7 @@ const ConfirmPayment = ({ selectedPackage }) => {
   const { mutate: addCustomer, isError, error } = useAddCustomerMutation();
   const { mutate: addOrder } = useAddOrderMutation();
   const { mutate: updateCustomer } = useUpdateCustomerMutation();
+  const { data: customer } = useGetCustomerQuery(user.sub);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleImageUpload = (e) => {
@@ -112,37 +112,59 @@ const ConfirmPayment = ({ selectedPackage }) => {
       if (user) {
         addCustomer(user, {
           onSuccess: (customerData) => {
-            setCustomer(customerData);
-            if (!customerData.mt5_id && !mt5Id) {
+            if (!customer.mt5_id && !mt5Id) {
               enqueueSnackbar("Please enter your MT5 ID", {
                 variant: "warning",
               });
               return;
-            } else {
+            } else if (mt5Id) {
               const data = {
                 mt5_id: mt5Id,
               };
 
-              updateCustomer({ data, line_user_id: customerData.line_user_id });
+              updateCustomer(
+                { data, line_user_id: customerData.line_user_id },
+                {
+                  onSuccess: () => {
+                    // Add order here after successful customer mutation
+                    addOrder(
+                      {
+                        packageId: selectedPackage.id, // Pass selected package ID
+                        customerId: customerData.id, // Pass customer ID
+                        paymentSlip: paymentSlip, // Pass the uploaded payment slip
+                      },
+                      {
+                        onSuccess: (orderData) => {
+                          console.log("Order created successfully:", orderData);
+                          setSuccessOrderKey(orderData.order_key);
+                        },
+                        onError: (orderError) => {
+                          console.error("Order creation error:", orderError);
+                        },
+                      },
+                    );
+                  },
+                },
+              );
+            } else {
+              // Add order here after successful customer mutation
+              addOrder(
+                {
+                  packageId: selectedPackage.id, // Pass selected package ID
+                  customerId: customerData.id, // Pass customer ID
+                  paymentSlip: paymentSlip, // Pass the uploaded payment slip
+                },
+                {
+                  onSuccess: (orderData) => {
+                    console.log("Order created successfully:", orderData);
+                    setSuccessOrderKey(orderData.order_key);
+                  },
+                  onError: (orderError) => {
+                    console.error("Order creation error:", orderError);
+                  },
+                },
+              );
             }
-
-            // Add order here after successful customer mutation
-            addOrder(
-              {
-                packageId: selectedPackage.id, // Pass selected package ID
-                customerId: customerData.id, // Pass customer ID
-                paymentSlip: paymentSlip, // Pass the uploaded payment slip
-              },
-              {
-                onSuccess: (orderData) => {
-                  console.log("Order created successfully:", orderData);
-                  setSuccessOrderKey(orderData.order_key);
-                },
-                onError: (orderError) => {
-                  console.error("Order creation error:", orderError);
-                },
-              },
-            );
           },
           onError: (error) => {
             console.error("Mutation error:", error);
