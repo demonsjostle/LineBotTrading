@@ -1,6 +1,6 @@
 venv/
 *.pdf
 *.docx
-*.mq5
+TradeSignalToLineOAv2.mq5
 Facebook_files/
 .DS_Store
