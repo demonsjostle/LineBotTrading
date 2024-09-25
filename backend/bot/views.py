@@ -25,7 +25,8 @@ from linebot.v3 import (
     WebhookHandler
 )
 from linebot.v3.exceptions import (
-    InvalidSignatureError
+    InvalidSignatureError,
+
 )
 from linebot.v3.messaging import (
     Configuration,
@@ -54,6 +55,7 @@ from linebot.v3.webhooks import (
     TextMessageContent,
 
 )
+
 from .line_templates.flex_messages.send_expired_warning import send_expired_warning
 
 
@@ -216,7 +218,7 @@ Trader : {trader_name}"""
             if len(customers) >= 1:
                 # customers_line_ids = [customer.line_user_id for customer in customers]
                 for customer in customers:
-                    if customer.expired_plan and customer.current_plan.name.lower() in request_message['package'].lower():
+                    if customer.expired_plan and customer.current_plan.name.lower() in request_message['package'].lower() and customer.line_user_id:
                         current_time = timezone.now()
                         three_days_later = current_time + timedelta(days=3)
                         # check not expired_plan
