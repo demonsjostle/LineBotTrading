@@ -4,32 +4,41 @@ from .models import Package, Order, Customer
 from .serializers import OrderSerializer, PackageSerializer, CustomerSerializer
 from rest_framework.exceptions import NotFound
 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
+
+@method_decorator(csrf_exempt, name='dispatch')
 class OrderListCreateView(generics.ListCreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PackageListCreateView(generics.ListCreateAPIView):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PackageDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CustomerCreateView(generics.CreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CustomerDetailByLineIDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CustomerSerializer
 

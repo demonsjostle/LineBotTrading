@@ -16,6 +16,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 from datetime import timedelta
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 # line
@@ -101,6 +103,7 @@ class NotificationListCreateView(generics.ListCreateAPIView):
     serializer_class = NotificationSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
