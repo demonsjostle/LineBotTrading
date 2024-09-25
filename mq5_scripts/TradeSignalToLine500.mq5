@@ -21,6 +21,7 @@ input bool   UseTelegram = true; // Use Send Alert Line
 input bool Package1 = false; //Banance 100$
 input bool Package2 = true; //Balance 500$
 input bool Package3 = true; //Balance 5000$
+input string ApiUrl = "https://kalive.knightarmyacademy.com/backend/api/send-message/"
 
 
 string CheckActivePackages()
@@ -1000,7 +1001,7 @@ void MessagingAPI(string message, string package)
    ArrayResize(post, StringToCharArray(jsonBody, post, 0, WHOLE_ARRAY, CP_UTF8) - 1);
 
    // Perform the WebRequest
-   int res = WebRequest("POST", "https://49d2602c74a5.ngrok.app/api/send-message/", headers, 10000, post, result, headers);
+   int res = WebRequest("POST", ApiUrl, headers, 10000, post, result, headers);
 
    // Check if the request was successful
    if (res != 200) 
