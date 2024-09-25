@@ -20,7 +20,7 @@ input bool   UseTelegram = true; // Use Send Alert Line
 input bool Package1 = true; //Banance 100$
 input bool Package2 = true; //Balance 500$
 input bool Package3 = true; //Balance 5000$
-input string ApiUrl = "https://kalive.knightarmyacademy.com/backend/api/send-message/"
+input string ApiUrl = "https://kalive.knightarmyacademy.com/backend/api/send-message/";
 
 
 string CheckActivePackages()
