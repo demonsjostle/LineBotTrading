@@ -110,6 +110,7 @@ class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NotificationSerializer
 
 
+@csrf_exempt
 class SendMessageAPIView(APIView):
 
     def post(self, request):
