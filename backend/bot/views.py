@@ -110,7 +110,7 @@ class SendMessageAPIView(APIView):
 
     def post(self, request):
         # Template for the buy format message
-        buy_format = """=== 🔔Open Order ===
+        buy_format = """=== 🔔{header} ===
 Symbol : {symbol}
 Position : Buy 🟩
 Entry Price : {entry_price}
@@ -123,7 +123,7 @@ Win/Loss : {win_loss}
 =====================
 Trader : {trader_name}"""
 
-        sell_format = """=== 🔔Open Order ===
+        sell_format = """=== 🔔{header} ===
 Symbol : {symbol}
 Position : Sell 🟥
 Entry Price : {entry_price}
@@ -135,9 +135,22 @@ Time 🕛: {time}
 Win/Loss : {win_loss}
 =====================
 Trader : {trader_name}"""
+        pending_format = """=== 🔔{header} ===
+Symbol : {symbol}
+Position : {position}
+Pending Price : {pending_price}
+TP : {tp}
+SL : {sl}
+
+Date 🗓️: {date}
+Time 🕛: {time}
+Win/Loss : {win_loss}
+=====================
+Trader : {trader_name}"""
+
         # Parse the incoming data
         serializer = MessageSerializer(data=request.data)
-
+        print(request.data)
         # Validate the data
         if serializer.is_valid():
             # Access the message
@@ -157,6 +170,7 @@ Trader : {trader_name}"""
             # Select the correct format based on the position (buy/sell)
             if data.get('position', '').upper() == 'BUY':
                 message_to_send = buy_format.format(
+                    header=self.extract_header(formatted_message),
                     symbol=data.get('symbol', ''),
                     entry_price=data.get('entry price', ''),
                     tp=data.get('tp', ''),
@@ -168,6 +182,7 @@ Trader : {trader_name}"""
                 )
             elif data.get('position', '').upper() == 'SELL':
                 message_to_send = sell_format.format(
+                    header=self.extract_header(formatted_message),
                     symbol=data.get('symbol', ''),
                     entry_price=data.get('entry price', ''),
                     tp=data.get('tp', ''),
@@ -178,16 +193,28 @@ Trader : {trader_name}"""
                     trader_name=data.get('trader', '')
                 )
             else:
-                return Response({"error": "Invalid position format"}, status=status.HTTP_400_BAD_REQUEST)
+                message_to_send = pending_format.format(
+                    header=self.extract_header(formatted_message),
+                    symbol=data.get('symbol', ''),
+                    position=data.get('position', ''),
+                    pending_price=data.get('pending price', ''),
+                    tp=data.get('tp', ''),
+                    sl=data.get('sl', ''),
+                    date=data.get('date', ''),
+                    time=data.get('time', ''),
+                    win_loss=data.get('win/loss', ''),
+                    trader_name=data.get('trader', '')
+                )
+                # return Response({"error": "Invalid position format"}, status=status.HTTP_400_BAD_REQUEST)
 
                 # print(request_message["message"])
                 # print(request_message["package"])
-
+            #
             customers = Customer.objects.all()
             if len(customers) >= 1:
                 # customers_line_ids = [customer.line_user_id for customer in customers]
                 for customer in customers:
-                    if customer.expired_plan and customer.current_plan.name.lower() == request_message['package'].lower():
+                    if customer.expired_plan and customer.current_plan.name.lower() in request_message['package'].lower():
                         current_time = timezone.now()
                         three_days_later = current_time + timedelta(days=3)
                         # check not expired_plan
@@ -207,3 +234,18 @@ Trader : {trader_name}"""
                 return Response({"success": True, "message": request_message}, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def extract_header(self, message):
+        """
+        Extracts the header string between '===' markers in the message.
+        """
+        # Regular expression to match the string between '==='
+        match = re.search(r'===\s*(.*?)\s*===', message)
+
+        # If a match is found, return the extracted string
+        if match:
+            return match.group(1)
+
+        # If no match is found, return None
+        return None

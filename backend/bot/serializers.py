@@ -10,4 +10,4 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.Serializer):
     message = serializers.CharField(max_length=500)
-    package = serializers.CharField(max_length=20)
+    package = serializers.CharField(max_length=200)
