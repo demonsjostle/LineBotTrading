@@ -8,37 +8,31 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 
-@csrf_exempt
 class OrderListCreateView(generics.ListCreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
-@csrf_exempt
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
-@csrf_exempt
 class PackageListCreateView(generics.ListCreateAPIView):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
 
 
-@csrf_exempt
 class PackageDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
 
 
-@csrf_exempt
 class CustomerCreateView(generics.CreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
 
-@csrf_exempt
 class CustomerDetailByLineIDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CustomerSerializer
 

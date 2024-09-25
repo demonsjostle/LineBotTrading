@@ -98,19 +98,16 @@ def handle_text_message(event):
         replyToken=event.reply_token, messages=[response_message]))
 
 
-@csrf_exempt
 class NotificationListCreateView(generics.ListCreateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
 
 
-@csrf_exempt
 class NotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
 
 
-@csrf_exempt
 class SendMessageAPIView(APIView):
 
     def post(self, request):
