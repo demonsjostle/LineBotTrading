@@ -20,7 +20,7 @@ input int   StopLoss = 0; // Stop Loss (point)
 input bool   UseTelegram = true; // Use Send Alert Line
 input bool Package1 = false; //Banance 100$
 input bool Package2 = false; //Balance 500$
-input bool Package3 = true; //Balance 5000$
+input bool Package3 = true; //Balance 1000$
 input string ApiUrl = "https://kalive.knightarmyacademy.com/backend/api/send-message/";
 
 string CheckActivePackages()
@@ -34,7 +34,7 @@ string CheckActivePackages()
    if (Package2)
       activePackages += "Balance 500$,";
    if (Package3)
-      activePackages += "Balance 5000$,";
+      activePackages += "Balance 1000$,";
 
    
 
