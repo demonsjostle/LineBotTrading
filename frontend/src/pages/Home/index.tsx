@@ -21,7 +21,7 @@ const index = () => {
     <MainLayout>
       <div className="flex flex-col items-center h-screen mt-20">
         {/* Image container */}
-        <h1 className="text-4xl mb-6">โปรโมชั่น</h1>
+        {/* <h1 className="text-4xl mb-6">โปรโมชั่น</h1> */}
         <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
           <img
             src={Promotion1}
