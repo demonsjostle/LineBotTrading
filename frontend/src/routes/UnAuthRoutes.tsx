@@ -10,7 +10,7 @@ const UnAuthRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Home />} />
       <Route path="/pricing" element={<Pricing />} />
-      <Route path="/about" element={<About />} />
+      {/* <Route path="/about" element={<About />} /> */}
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

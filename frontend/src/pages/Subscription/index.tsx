@@ -112,7 +112,7 @@ const ConfirmPayment = ({ selectedPackage }) => {
       if (user) {
         addCustomer(user, {
           onSuccess: (customerData) => {
-            if (!customer.mt5_id && !mt5Id) {
+            if (!customerData.mt5_id && !mt5Id) {
               enqueueSnackbar("Please enter your MT5 ID", {
                 variant: "warning",
               });

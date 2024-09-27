@@ -2,7 +2,7 @@ import MainLayout from "../../layouts";
 import { usePackagesQuery } from "../../services/queries/usePackage";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../services/queries/useUser";
-
+import PromotionBanner from "../../assets/images/promotions/pricing.jpg";
 interface Package {
   id: number;
   name: string;
@@ -27,7 +27,15 @@ const index = () => {
 
   return (
     <MainLayout>
-      <div className="container mx-auto p-8 mt-24">
+      <div className="container mx-auto p-8 mt-5">
+        {/* Banner Image */}
+        <div className="mb-8">
+          <img
+            src={PromotionBanner}
+            alt="Banner"
+            className="w-full h-auto rounded-lg shadow-lg"
+          />
+        </div>
         <h1 className="text-4xl font-extrabold text-center mb-8 text-gray-900">
           Pricing Plans
         </h1>
