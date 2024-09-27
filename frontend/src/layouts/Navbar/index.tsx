@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useUser } from "../../services/queries/useUser";
 import { useLogout } from "../../services/queries/useLogout";
 import { useNavigate } from "react-router-dom";
@@ -161,6 +161,22 @@ const index = () => {
             >
               Pricing
             </a>
+            {user && (
+              <React.Fragment>
+                <a
+                  href="/profile"
+                  className="text-gray-500 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium"
+                >
+                  Profile
+                </a>
+                <a
+                  onClick={onLogout}
+                  className="text-gray-500 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium"
+                >
+                  Sign out
+                </a>
+              </React.Fragment>
+            )}
           </div>
         </div>
       )}
