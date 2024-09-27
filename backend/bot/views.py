@@ -181,7 +181,7 @@ Trader : {trader_name}"""
                     sl=data.get('sl', ''),
                     date=data.get('date', ''),
                     time=data.get('time', ''),
-                    win_loss=data.get('win/loss', ''),
+                    win_loss= data.get('win/loss', '') + "✅" if "Win" in data.get('win/loss', '') else data.get('win/loss', '') + "❌",
                     trader_name=data.get('trader', '')
                 )
             elif data.get('position', '').upper() == 'SELL':
@@ -193,7 +193,7 @@ Trader : {trader_name}"""
                     sl=data.get('sl', ''),
                     date=data.get('date', ''),
                     time=data.get('time', ''),
-                    win_loss=data.get('win/loss', ''),
+                    win_loss=data.get('win/loss', '') + "✅" if "Win" in data.get('win/loss', '') else data.get('win/loss', '') + "❌",
                     trader_name=data.get('trader', '')
                 )
             else:
@@ -206,7 +206,7 @@ Trader : {trader_name}"""
                     sl=data.get('sl', ''),
                     date=data.get('date', ''),
                     time=data.get('time', ''),
-                    win_loss=data.get('win/loss', ''),
+                    win_loss=data.get('win/loss', '') + "✅" if "Win" in data.get('win/loss', '') else data.get('win/loss', '') + "❌",
                     trader_name=data.get('trader', '')
                 )
                 # return Response({"error": "Invalid position format"}, status=status.HTTP_400_BAD_REQUEST)
