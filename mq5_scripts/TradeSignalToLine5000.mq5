@@ -1,4 +1,3 @@
-
 #include <trade/trade.mqh>
 //+------------------------------------------------------------------+
 //|   CMyBot                                                         |
@@ -20,8 +19,10 @@ input int   StopLoss = 0; // Stop Loss (point)
 input bool   UseTelegram = true; // Use Send Alert Line
 input bool Package1 = false; //Banance 100$
 input bool Package2 = false; //Balance 500$
-input bool Package3 = true; //Balance 1000$
+input bool Package3 = false; //Balance 1000$
+input bool Package4 = true; //Balance 5000$
 input string ApiUrl = "https://kalive.knightarmyacademy.com/backend/api/send-message/";
+
 
 string CheckActivePackages()
 {
@@ -35,7 +36,8 @@ string CheckActivePackages()
       activePackages += "Balance 500$,";
    if (Package3)
       activePackages += "Balance 1000$,";
-
+   if (Package4)
+      activePackages += "Balance 5000$,";
    
 
    // Return the result
