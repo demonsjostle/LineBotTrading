@@ -52,23 +52,49 @@ class Order(models.Model):
     is_confirmed = models.BooleanField(default=False)
     confirmed_date = models.DateTimeField(default=None, blank=True, null=True)
     expired = models.DateTimeField(default=None, blank=True, null=True)
+    is_active = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.order_key:
             self.order_key = str(uuid.uuid4())  # Generate a unique order key
 
-        # If the order is confirmed and the confirmed_date is not set, update it
-        if self.is_confirmed and not self.confirmed_date:
-            self.confirmed_date = timezone.now()
+        # # If the order is confirmed and the confirmed_date is not set, update it
+        # if self.is_confirmed and not self.confirmed_date:
+        #     self.confirmed_date = timezone.now()
+        #
+        #     # Also update the expired date based on the package duration
+        #     if self.package and not self.expired:
+        #         expired = timezone.now() + timedelta(days=self.package.duration)
+        #         self.expired = expired
+        #         self.customer.expired_plan = expired
+        #     if self.customer:
+        #         self.customer.current_plan = self.package
+        #         self.customer.save()
+        # Check if the order is confirmed
+        if self.is_confirmed:
+            # Set is_active=True for this order
+            self.is_active = True
 
-            # Also update the expired date based on the package duration
+            # Set confirmed_date if not already set
+            if not self.confirmed_date:
+                self.confirmed_date = timezone.now()
+
+            # Update expired date based on package duration
             if self.package and not self.expired:
-                expired = timezone.now() + timedelta(days=self.package.duration)
-                self.expired = expired
-                self.customer.expired_plan = expired
+                self.expired = timezone.now() + timedelta(days=self.package.duration)
+                self.customer.expired_plan = self.expired
+
+            # Set all other orders for the same customer to is_active=False
+            Order.objects.filter(customer=self.customer).exclude(id=self.id).update(is_active=False)
+
+            # Update the customer's current plan to this package
             if self.customer:
                 self.customer.current_plan = self.package
                 self.customer.save()
+
+        # Automatically deactivate expired orders
+        if self.expired and timezone.now() > self.expired:
+            self.is_active = False
         super().save(*args, **kwargs)
 
     def __str__(self):
