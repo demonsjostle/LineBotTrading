@@ -544,7 +544,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Loss ("+StopLoss+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -562,7 +562,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Loss ("+StopLoss+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -584,7 +584,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Win ("+TakeProfit+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -602,7 +602,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Win ("+TakeProfit+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -635,7 +635,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(profit,_Digits)
              +"\\nSL : "+DoubleToString(stoploss,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : None"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -666,7 +666,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(profit,_Digits)
              +"\\nSL : "+DoubleToString(stoploss,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : None"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -684,7 +684,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Win ("+DoubleToString(MathAbs(trans.price-PositionGetDouble(POSITION_PRICE_OPEN))/_Point,2)+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -702,7 +702,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Loss ("+DoubleToString(MathAbs(trans.price-PositionGetDouble(POSITION_PRICE_OPEN))/_Point,2)+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -720,7 +720,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Win ("+DoubleToString(MathAbs(trans.price-trans.price_trigger)/_Point,2)+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -738,7 +738,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(trans.price_tp,_Digits)
              +"\\nSL : "+DoubleToString(trans.price_sl,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : Loss ("+DoubleToString(MathAbs(trans.price-PositionGetDouble(POSITION_PRICE_OPEN))/_Point,2)+")"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -778,7 +778,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
       break;
       default: // other transactions  
         {
-         if(trans.order_state == 1)
+         if(trans.order_state == 1 && trans.price_sl == 0 && trans.price_tp == 0)
          {
            if(lastOrderType == ORDER_TYPE_BUY_LIMIT)
             {
@@ -804,7 +804,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(profit,_Digits)
              +"\\nSL : "+DoubleToString(stoploss,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : None"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -837,7 +837,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(profit,_Digits)
              +"\\nSL : "+DoubleToString(stoploss,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : None"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -870,7 +870,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(profit,_Digits)
              +"\\nSL : "+DoubleToString(stoploss,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : None"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -903,7 +903,7 @@ void OnTradeTransaction(const MqlTradeTransaction &trans,
              +"\\nTP : "+DoubleToString(profit,_Digits)
              +"\\nSL : "+DoubleToString(stoploss,_Digits)
              +"\\n\\nDate : "+TimeToString(TimeCurrent(),TIME_DATE)
-             +"\\nTime : "+TimeToString(TimeCurrent(),TIME_MINUTES)
+             +"\\nTime : "+TimeToString(ConvertServerTimeToLocal(TimeCurrent()), TIME_MINUTES)
              +"\\nWin/Loss : None"
              +"\\n====================="
              +"\\nTrader : "+Username;
@@ -985,6 +985,14 @@ string GetRetcodeID(int retcode)
 
 
 
+datetime ConvertServerTimeToLocal(datetime serverTime)
+{
+   // Set the time zone difference to +4 hours
+   int timeZoneDifference = 4;
+
+   // Add the difference in seconds (3600 seconds = 1 hour)
+   return serverTime + (timeZoneDifference * 3600);
+}
 
 
 
