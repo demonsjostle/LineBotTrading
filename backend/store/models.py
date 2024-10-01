@@ -31,6 +31,8 @@ class Customer(models.Model):
     email = models.EmailField(blank=True, null=True)
     mt5_id = models.CharField(
         max_length=6, default=None, blank=True, null=True)
+    ctrader = models.CharField(
+        max_length=7, default=None, blank=True, null=True)
     current_plan = models.ForeignKey(Package,
                                      on_delete=models.CASCADE, blank=True, null=True)
     expired_plan = models.DateTimeField(default=None, blank=True, null=True)
