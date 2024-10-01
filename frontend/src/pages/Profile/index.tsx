@@ -14,6 +14,7 @@ interface Customer {
   phone: string | null;
   email: string | null;
   mt5_id: string | null;
+  ctrader: string | null;
   current_plan: string | null;
   expired_plan: string | null;
 }
@@ -26,6 +27,7 @@ const index = () => {
     phone: "",
     email: "",
     mt5_id: "",
+    ctrader: "",
     current_plan: "",
     expired_plan: "",
   });
@@ -71,6 +73,7 @@ const index = () => {
       phone: customer.phone || "",
       email: customer.email || "",
       mt5_id: customer.mt5_id || "",
+      ctrader: customer.ctrader || "",
     };
     updateCustomer(
       {
@@ -158,6 +161,20 @@ const index = () => {
                 type="text"
                 name="mt5_id"
                 value={customer.mt5_id || ""}
+                onChange={handleChange}
+                className="text-gray-600 bg-white p-2 rounded-md w-full border border-gray-300"
+              />
+            </div>
+
+            {/* Ctrader (Editable) */}
+            <div className="w-full mb-4">
+              <h2 className="text-lg font-medium text-gray-700">
+                Ctrader (Editable)
+              </h2>
+              <input
+                type="text"
+                name="ctrader"
+                value={customer.ctrader || ""}
                 onChange={handleChange}
                 className="text-gray-600 bg-white p-2 rounded-md w-full border border-gray-300"
               />

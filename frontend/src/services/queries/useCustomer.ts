@@ -39,7 +39,12 @@ export const useUpdateCustomerMutation = () => {
       data,
       line_user_id,
     }: {
-      data: { phone?: string; email?: string; mt5_id?: string };
+      data: {
+        phone?: string;
+        email?: string;
+        mt5_id?: string;
+        ctrader?: string;
+      };
       line_user_id: string;
     }) => updateCustomer(data, line_user_id),
     onSuccess: () => {

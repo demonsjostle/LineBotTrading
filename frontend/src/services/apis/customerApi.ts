@@ -38,6 +38,7 @@ export const updateCustomer = async (
     phone?: string;
     email?: string;
     mt5_id?: string;
+    ctrader?: string;
   },
   line_user_id: string,
 ) => {
