@@ -91,6 +91,8 @@ const ConfirmPayment = ({ selectedPackage }) => {
   const [paymentSlip, setPaymentSlip] = useState(null);
   const [isSlipUploaded, setIsSlipUploaded] = useState(false);
   const [mt5Id, setMt5Id] = useState("");
+  const [ctrader, setCtrader] = useState("");
+  const [isAddOrderSuccess, setIsAddOrderSuccess] = useState(false);
   const [successOrderKey, setSuccessOrderKey] = useState(null);
   const { user } = useUser();
   const { mutate: addCustomer, isError, error } = useAddCustomerMutation();
@@ -112,14 +114,20 @@ const ConfirmPayment = ({ selectedPackage }) => {
       if (user) {
         addCustomer(user, {
           onSuccess: (customerData) => {
-            if (!customerData.mt5_id && !mt5Id) {
-              enqueueSnackbar("Please enter your MT5 ID", {
+            if (
+              !customerData.mt5_id &&
+              !mt5Id &&
+              !customerData.ctrader &&
+              !ctrader
+            ) {
+              enqueueSnackbar("Please enter your MT5 ID or Ctrader", {
                 variant: "warning",
               });
               return;
-            } else if (mt5Id) {
+            } else if (mt5Id || ctrader) {
               const data = {
                 mt5_id: mt5Id,
+                ctrader: ctrader,
               };
 
               updateCustomer(
@@ -137,6 +145,7 @@ const ConfirmPayment = ({ selectedPackage }) => {
                         onSuccess: (orderData) => {
                           console.log("Order created successfully:", orderData);
                           setSuccessOrderKey(orderData.order_key);
+                          setIsAddOrderSuccess(true);
                         },
                         onError: (orderError) => {
                           console.error("Order creation error:", orderError);
@@ -157,6 +166,7 @@ const ConfirmPayment = ({ selectedPackage }) => {
                 {
                   onSuccess: (orderData) => {
                     console.log("Order created successfully:", orderData);
+                    setIsAddOrderSuccess(true);
                     setSuccessOrderKey(orderData.order_key);
                   },
                   onError: (orderError) => {
@@ -181,72 +191,106 @@ const ConfirmPayment = ({ selectedPackage }) => {
   return (
     <div className="container mx-auto p-8 mt-10 max-w-4xl">
       <div className="bg-white rounded-lg shadow-xl p-8">
-        <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-6">
-          ยืนยันการชำระเงิน
-        </h1>
-        <p className="text-lg text-gray-600 text-center mb-4">
-          กรุณาตรวจสอบข้อมูลการชำระเงินและอัปโหลดหลักฐานการชำระเงินของคุณ
-        </p>
-
-        {/* Upload Payment Slip Section */}
-        <div className="mb-6">
-          <label className="block text-lg font-medium text-gray-700 text-center mb-4">
-            อัปโหลดสลิปการชำระเงิน
-          </label>
-          <div className="flex justify-center">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-              id="payment-slip-upload"
-            />
-            <label
-              htmlFor="payment-slip-upload"
-              className="bg-blue-600 text-white py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
-            >
-              {isSlipUploaded ? "สลิปอัปโหลดแล้ว" : "อัปโหลดสลิป"}
-            </label>
-          </div>
-          {isSlipUploaded && (
-            <p className="text-green-600 text-center mt-4">
-              {paymentSlip.name} อัปโหลดสำเร็จ!
+        {!isAddOrderSuccess && (
+          <>
+            <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-6">
+              ยืนยันการชำระเงิน
+            </h1>
+            <p className="text-lg text-gray-600 text-center mb-4">
+              กรุณาตรวจสอบข้อมูลการชำระเงินและอัปโหลดหลักฐานการชำระเงินของคุณ
             </p>
-          )}
-        </div>
 
-        {/* Conditionally render mt5_id input */}
-        {!customer?.mt5_id && (
-          <div className="mb-6">
-            <label className="block text-lg font-medium text-gray-700 text-center mb-4">
-              กรุณากรอก MT5 ID
-            </label>
-            <div className="flex justify-center">
-              <input
-                type="text"
-                value={mt5Id}
-                onChange={(e) => setMt5Id(e.target.value)}
-                className="border rounded-lg py-2 px-4 w-64 text-center"
-                placeholder="Enter your MT5 ID"
-              />
+            {/* Upload Payment Slip Section */}
+            <div className="mb-6">
+              <label className="block text-lg font-medium text-gray-700 text-center mb-4">
+                อัปโหลดสลิปการชำระเงิน
+              </label>
+              <div className="flex justify-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="payment-slip-upload"
+                />
+                <label
+                  htmlFor="payment-slip-upload"
+                  className="bg-blue-600 text-white py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
+                >
+                  {isSlipUploaded ? "สลิปอัปโหลดแล้ว" : "อัปโหลดสลิป"}
+                </label>
+              </div>
+              {isSlipUploaded && (
+                <p className="text-green-600 text-center mt-4">
+                  {paymentSlip.name} อัปโหลดสำเร็จ!
+                </p>
+              )}
             </div>
-          </div>
+
+            {/* Conditionally render mt5_id input */}
+            {!customer?.mt5_id && (
+              <div className="mb-6">
+                <label className="block text-lg font-medium text-gray-700 text-center mb-4">
+                  กรุณากรอก MT5 ID
+                </label>
+                <div className="flex justify-center">
+                  <input
+                    type="text"
+                    value={mt5Id}
+                    onChange={(e) => setMt5Id(e.target.value)}
+                    className="border rounded-lg py-2 px-4 w-64 text-center"
+                    placeholder="Enter your MT5 ID"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Conditionally render mt5_id input */}
+            {!customer?.ctrader && (
+              <div className="mb-6">
+                <label className="block text-lg font-medium text-gray-700 text-center mb-4">
+                  กรุณากรอก Ctrader
+                </label>
+                <div className="flex justify-center">
+                  <input
+                    type="text"
+                    value={ctrader}
+                    onChange={(e) => setCtrader(e.target.value)}
+                    className="border rounded-lg py-2 px-4 w-64 text-center"
+                    placeholder="Enter your Ctrader"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Confirm Payment Button */}
+            <div className="flex justify-center">
+              <button
+                className="bg-green-600 text-white py-3 px-8 rounded-lg shadow-lg hover:bg-green-700 transition duration-300"
+                onClick={handleSubmitPayment}
+              >
+                ยืนยันการชำระเงิน
+              </button>
+            </div>
+          </>
         )}
 
-        {/* Confirm Payment Button */}
-        <div className="flex justify-center">
-          <button
-            className="bg-green-600 text-white py-3 px-8 rounded-lg shadow-lg hover:bg-green-700 transition duration-300"
-            onClick={handleSubmitPayment}
-          >
-            ยืนยันการชำระเงิน
-          </button>
-        </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center flex-col">
           {successOrderKey && (
-            <p className="text-green-600 text-center mt-4">
-              Order key ของคุณคือ: {successOrderKey}
-            </p>
+            <>
+              <p className="text-yellow-600 text-center mt-2">
+                **โปรดบันทึก Order key ของคุณ และแจ้งไปยังแอดมิน**
+              </p>
+              <p className="text-green-600 text-center mt-4">
+                Order key ของคุณคือ: <br />
+                {successOrderKey}
+              </p>
+              {/* <div className="flex justify-center"> */}
+              {/*   <button className="bg-blue-600 text-white py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer "> */}
+              {/*     Profile */}
+              {/*   </button> */}
+              {/* </div> */}
+            </>
           )}
         </div>
       </div>
