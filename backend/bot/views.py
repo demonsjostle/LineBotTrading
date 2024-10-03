@@ -18,6 +18,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+import logging
 
 
 # line
@@ -46,7 +47,9 @@ from linebot.v3.messaging import (
     PostbackAction,
     PushMessageRequest,
     FlexMessage,
-    FlexContainer
+    FlexContainer,
+    ApiException,
+    ErrorResponse
 
 )
 from linebot.v3.webhooks import (
@@ -57,6 +60,14 @@ from linebot.v3.webhooks import (
 )
 
 from .line_templates.flex_messages.send_expired_warning import send_expired_warning
+
+
+# Configure the logger
+logging.basicConfig(
+    filename='line_bot_errors.log',  # Log file name
+    level=logging.ERROR,             # Log level
+    format='%(asctime)s - %(levelname)s - %(message)s'  # Log format
+)
 
 
 ACCESS_TOKEN = config('LINE_ACCESS_TOKEN')
@@ -225,20 +236,32 @@ Trader : {trader_name}"""
                         if not (current_time > customer.expired_plan):
                             mess = TextMessage(
                                 text=message_to_send)
-                            line_bot_api.push_message(PushMessageRequest(
-                                to=customer.line_user_id, messages=[mess]))
+                            # line_bot_api.push_message(PushMessageRequest(
+                            #     to=customer.line_user_id, messages=[mess]))
+                            self.push_message(to=customer.line_user_id, message=mess)
 
                             # Chek 3 days later
                             if customer.expired_plan <= three_days_later:
-                                mess = FlexMessage(altText="learning&development", contents=FlexContainer.from_json(
+                                mess = FlexMessage(altText="new signals", contents=FlexContainer.from_json(
                                     f'''{json.dumps(send_expired_warning(3), indent=4)}'''))
-                                line_bot_api.push_message(PushMessageRequest(
-                                    to=customer.line_user_id, messages=[mess]))
+                                # line_bot_api.push_message(PushMessageRequest(
+                                #     to=customer.line_user_id, messages=[mess]))
+                                self.push_message(to=customer.line_user_id, message=mess)
 
                 return Response({"success": True, "message": request_message}, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def push_message(self, to, message):
+        try:
+            line_bot_api.push_message(PushMessageRequest(
+                                    to=to, messages=[message]))
+        except ApiException as e: 
+            # Log error details
+            logging.error(f"Status Code: {e.status}")
+            logging.error(f"Request ID: {e.headers.get('x-line-request-id')}")
+            logging.error(f"Error Body: {ErrorResponse.from_json(e.body)}")
 
     def extract_header(self, message):
         """
