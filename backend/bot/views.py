@@ -49,7 +49,8 @@ from linebot.v3.messaging import (
     FlexMessage,
     FlexContainer,
     ApiException,
-    ErrorResponse
+    ErrorResponse,
+    MulticastRequest,
 
 )
 from linebot.v3.webhooks import (
@@ -227,6 +228,12 @@ Trader : {trader_name}"""
             #
             customers = Customer.objects.all()
             if len(customers) >= 1:
+                signal_message = TextMessage(
+                                text=message_to_send)
+                expired_message = FlexMessage(altText="new signals", contents=FlexContainer.from_json(
+                                    f'''{json.dumps(send_expired_warning(3), indent=4)}'''))
+                signal_ids = []
+                expired_ids = []
                 # customers_line_ids = [customer.line_user_id for customer in customers]
                 for customer in customers:
                     if customer.expired_plan and customer.current_plan.name.lower() in request_message['package'].lower() and customer.line_user_id:
@@ -234,20 +241,25 @@ Trader : {trader_name}"""
                         three_days_later = current_time + timedelta(days=3)
                         # check not expired_plan
                         if not (current_time > customer.expired_plan):
-                            mess = TextMessage(
-                                text=message_to_send)
+                            signal_ids.append(customer.line_user_id)
+                            # mess = TextMessage(
+                            #     text=message_to_send)
                             # line_bot_api.push_message(PushMessageRequest(
                             #     to=customer.line_user_id, messages=[mess]))
-                            self.push_message(to=customer.line_user_id, message=mess)
+                            # self.push_message(to=customer.line_user_id, message=mess)
 
                             # Chek 3 days later
                             if customer.expired_plan <= three_days_later:
-                                mess = FlexMessage(altText="new signals", contents=FlexContainer.from_json(
-                                    f'''{json.dumps(send_expired_warning(3), indent=4)}'''))
+                                expired_ids.append(customer.line_user_id)
+                                # mess = FlexMessage(altText="new signals", contents=FlexContainer.from_json(
+                                #     f'''{json.dumps(send_expired_warning(3), indent=4)}'''))
                                 # line_bot_api.push_message(PushMessageRequest(
                                 #     to=customer.line_user_id, messages=[mess]))
-                                self.push_message(to=customer.line_user_id, message=mess)
-
+                                # self.push_message(to=customer.line_user_id, message=mess)
+                if signal_ids:
+                    self.multicast_message(ids=signal_ids, message=signal_message)
+                if expired_ids:
+                    self.multicast_message(ids=expired_ids, message=expired_message)
                 return Response({"success": True, "message": request_message}, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -262,6 +274,17 @@ Trader : {trader_name}"""
             logging.error(f"Status Code: {e.status}")
             logging.error(f"Request ID: {e.headers.get('x-line-request-id')}")
             logging.error(f"Error Body: {ErrorResponse.from_json(e.body)}")
+
+    def multicast_message(self, ids, message):
+        try: 
+            line_bot_api.multicast(MulticastRequest(
+                         to=ids, messages=[message]))
+        except ApiException as e: 
+            # Log error details
+            logging.error(f"Status Code: {e.status}")
+            logging.error(f"Request ID: {e.headers.get('x-line-request-id')}")
+            logging.error(f"Error Body: {ErrorResponse.from_json(e.body)}")
+       
 
     def extract_header(self, message):
         """
